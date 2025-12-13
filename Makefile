@@ -1,6 +1,7 @@
 BINARY := taskservice
 CMD_PKG := ./cmd/taskservice
 GOCACHE ?= $(PWD)/.gocache
+COVER_PKGS ?= ./internal/... ./pkg/...
 
 .PHONY: all build run test cover tidy
 .PHONY: docker-build docker-up docker-up-observability docker-up-all docker-down docker-logs
@@ -48,11 +49,11 @@ test:
 	GOCACHE=$(GOCACHE) go test ./...
 
 cover:
-	GOCACHE=$(GOCACHE) go test -coverprofile=coverage.out ./...
+	GOCACHE=$(GOCACHE) go test -coverprofile=coverage.out $(COVER_PKGS)
 	GOCACHE=$(GOCACHE) go tool cover -func=coverage.out
 
 cover-packages:
-	GOCACHE=$(GOCACHE) go test -cover ./...
+	GOCACHE=$(GOCACHE) go test -cover $(COVER_PKGS)
 
 tidy:
 	go mod tidy

@@ -1,0 +1,8 @@
+goos: linux
+goarch: amd64
+pkg: taskservice/internal/domain/task
+cpu: Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz
+BenchmarkListTasksNoCache-12    	128092773	         9.598 ns/op
+BenchmarkListTasksCached-12     	51482480	        22.61 ns/op
+PASS
+ok  	taskservice/internal/domain/task	3.374s
