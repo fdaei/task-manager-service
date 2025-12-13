@@ -1,0 +1,20 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -buildvcs=false -o ./tmp/taskservice ./cmd/taskservice"
+  bin = "tmp/taskservice"
+  full_bin = "./tmp/taskservice serve"
+  include_ext = ["go", "tpl", "tmpl", "html", "yaml", "yml"]
+  exclude_dir = ["tmp", "bin", "deploy", "vendor", ".git", ".gocache"]
+  delay = 500
+  stop_on_error = true
+
+[log]
+  level = "info"
+
+[env]
+  # override here or use your shell/env file
+  # HTTP_PORT = "8080"
+  # DATABASE_URL = "postgres://postgres:postgres@localhost:5432/taskservice?sslmode=disable"
+  # REDIS_HOST = "localhost:6379"
