@@ -1,0 +1,388 @@
+openapi: 3.0.3
+info:
+  title: Task Service API
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+paths:
+  /users:
+    post:
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+            examples:
+              createUser:
+                value:
+                  name: "Jane Doe"
+                  email: "jane@example.com"
+      responses:
+        "201":
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Duplicate email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: User identifier
+        schema:
+          type: integer
+          format: uint64
+    get:
+      summary: Get a user by ID
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /tasks:
+    get:
+      summary: List tasks
+      parameters:
+        - name: user_id
+          in: query
+          description: Optional filter to return tasks for a specific user
+          required: false
+          schema:
+            type: integer
+            format: uint64
+          example: 123
+        - name: status
+          in: query
+          description: Optional filter by task status
+          required: false
+          schema:
+            type: string
+            enum: ["todo", "doing", "done"]
+          example: todo
+        - name: page
+          in: query
+          description: Page number (1-based)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          description: Number of items per page (max 100)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+              examples:
+                tasks:
+                  value:
+                    - id: 1
+                      user_id: 123
+                      title: "Buy groceries"
+                      description: "Milk, eggs, bread"
+                      status: "todo"
+                      created_at: "2024-01-01T10:00:00Z"
+                      updated_at: "2024-01-01T10:00:00Z"
+                    - id: 2
+                      user_id: 123
+                      title: "Write report"
+                      description: "Quarterly summary"
+                      status: "doing"
+                      created_at: "2024-01-02T09:00:00Z"
+                      updated_at: "2024-01-02T11:00:00Z"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskRequest"
+            examples:
+              createTask:
+                value:
+                  user_id: 123
+                  title: "Buy groceries"
+                  description: "Milk, eggs, bread"
+                  status: "todo"
+      responses:
+        "201":
+          description: Created task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+              examples:
+                task:
+                  value:
+                    id: 1
+                    user_id: 123
+                    title: "Buy groceries"
+                    description: "Milk, eggs, bread"
+                    status: "todo"
+                    created_at: "2024-01-01T10:00:00Z"
+                    updated_at: "2024-01-01T10:00:00Z"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Task identifier
+        schema:
+          type: integer
+          format: uint64
+    get:
+      summary: Get a task by ID
+      responses:
+        "200":
+          description: Task found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTaskRequest"
+            examples:
+              updateTask:
+                value:
+                  user_id: 123
+                  title: "Buy groceries"
+                  description: "Milk, eggs, bread"
+                  status: "doing"
+      responses:
+        "200":
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a task
+      responses:
+        "204":
+          description: Task deleted
+        "404":
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+          example: 1
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T10:00:00Z"
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+          example: 1
+        user_id:
+          type: integer
+          format: uint64
+          example: 123
+        title:
+          type: string
+          example: Buy groceries
+        description:
+          type: string
+          example: Milk, eggs, bread
+        status:
+          type: string
+          enum: ["todo", "doing", "done"]
+          example: todo
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T10:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T10:00:00Z"
+    CreateUserRequest:
+      type: object
+      required: ["name", "email"]
+      properties:
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+    CreateTaskRequest:
+      type: object
+      required: ["user_id", "title", "status"]
+      properties:
+        user_id:
+          type: integer
+          format: uint64
+          example: 123
+        title:
+          type: string
+          example: Buy groceries
+        description:
+          type: string
+          example: Milk, eggs, bread
+        status:
+          type: string
+          enum: ["todo", "doing", "done"]
+          example: todo
+    UpdateTaskRequest:
+      type: object
+      required: ["user_id", "title", "status"]
+      properties:
+        user_id:
+          type: integer
+          format: uint64
+          example: 123
+        title:
+          type: string
+          example: Buy groceries
+        description:
+          type: string
+          example: Milk, eggs, bread
+        status:
+          type: string
+          enum: ["todo", "doing", "done"]
+          example: doing
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "error message"
