@@ -1,0 +1,30 @@
+# Binaries and build output
+/bin/
+taskservice
+*.exe
+*.test
+
+# Go caches and coverage
+.gocache/
+coverage.out
+tmp_cov.out
+*.coverprofile
+
+# Generated reports
+test_report.html
+
+# Local runtime data
+/tmp/
+*.log
+*.pid
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
