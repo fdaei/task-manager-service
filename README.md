@@ -1,5 +1,13 @@
-Task Service
-============
+# Task Service
+
+[![CI](https://github.com/fdaei/task_manger/actions/workflows/ci.yml/badge.svg)](https://github.com/fdaei/task_manger/actions/workflows/ci.yml)
+![Go](https://img.shields.io/badge/Go-1.24-00ADD8?style=flat-square&logo=go&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
+![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-000000?style=flat-square&logo=opentelemetry&logoColor=white)
+
+A production-oriented Go REST API for managing users and task workflows, designed around clear layers, optional cache-aside behavior, automated tests, and built-in observability.
+
 Overview
 - Gin-based REST API for managing users and tasks (todo/doing/done).
 - Persistence in PostgreSQL; optional Redis cache-aside for list endpoints.
